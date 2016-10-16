@@ -7,10 +7,25 @@ class Result
     protected $code = '';
     protected $message = '';
     protected $errors = [];
+    protected $extra = [];
 
     const
         SUCCESS = true,
-        FAIL = false;
+        FAIL = false,
+
+        // readable string codes to describe the result in multi lang situations
+        CREATED    = 'created',
+        UPDATED    = 'updated',
+        SAVED      = 'saved',
+        DELETED    = 'deleted',
+        VALIDATION = 'validation',
+        AUTH       = 'authorised',
+        NOT_AUTH   = 'not_authorised',
+        FOUND      = 'found',
+        NOT_FOUND  = 'not_found',
+        ERROR      = 'error',
+        FAILED     = 'failed',
+        PROCESSING = 'processing';
 
     /**
      * initiate a success result
@@ -18,25 +33,12 @@ class Result
      * @param string $code
      * @param string $message
      * @param array $errors
+     * @param array $extras
      * @return Result $Result
      */
-    public static function success($code = '', $message = '', $errors = [])
+    public static function success($code = '', $message = '', $errors = [], $extras = [])
     {
-        $Result = new static(self::SUCCESS);
-
-        if (! empty($code)) {
-            $Result->setCode($code);
-        }
-
-        if (! empty($message)) {
-            $Result->setMessage($message);
-        }
-
-        if (! empty($errors)) {
-            $Result->setErrors($errors);
-        }
-
-        return $Result;
+        return self::loadResult(self::SUCCESS, $code, $message, $errors, $extras);
     }
 
     /**
@@ -45,11 +47,27 @@ class Result
      * @param string $code
      * @param string $message
      * @param array $errors
+     * @param array $extras
      * @return Result $Result
      */
-    public static function fail($code = '', $message = '', $errors = [])
+    public static function fail($code = '', $message = '', $errors = [], $extras = [])
     {
-        $Result = new static(self::FAIL);
+        return self::loadResult(self::FAIL, $code, $message, $errors, $extras);
+    }
+
+    /**
+     * load up the result object
+     *
+     * @param bool $status
+     * @param string $code
+     * @param string $message
+     * @param array $errors
+     * @param array $extras
+     * @return Result $Result
+     */
+    protected static function loadResult($status, $code, $message, $errors, $extras)
+    {
+        $Result = new static($status);
 
         if (! empty($code)) {
             $Result->setCode($code);
@@ -61,6 +79,10 @@ class Result
 
         if (! empty($errors)) {
             $Result->setErrors($errors);
+        }
+
+        if (! empty($extras)) {
+            $Result->setExtras($extras);
         }
 
         return $Result;
@@ -179,7 +201,46 @@ class Result
         } else {
             $this->errors[] = $error;
         }
-        
+
+        return $this;
+    }
+
+    /**
+     * get the extra data
+     *
+     * @return array $extras
+     */
+    public function getExtras()
+    {
+        return $this->extras;
+    }
+
+    /**
+     * set extra data
+     *
+     * @param string $key
+     * @param mixed $data
+     * @return Result $this
+     */
+    public function setExtra($key, $data)
+    {
+        $this->extras[$key] = $data;
+        return $this;
+    }
+
+    /**
+     * set all extra data
+     *
+     * @param string $extras
+     * @return Result $this
+     */
+    public function setExtras($extras)
+    {
+        if (! is_array($extras)) {
+            throw new \InvalidArgumentException('Result->setExtras() must be passed an array');
+        }
+
+        $this->extras = $extras;
         return $this;
     }
 }
