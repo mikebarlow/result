@@ -2,7 +2,7 @@
     "name": "snscripts/result",
     "description": "Framework agnostic Result Object",
     "keywords": ["Results", "Return Statuses", "Framework Agnostic"],
-    "homepage": "https://github.com/snscripts/Result",
+    "homepage": "https://github.com/mikebarlow/Result",
     "license": "MIT",
     "authors": [
         {
