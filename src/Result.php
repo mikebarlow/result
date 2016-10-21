@@ -216,6 +216,21 @@ class Result
     }
 
     /**
+     * get individual extra items
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public function getExtra($key)
+    {
+        if (array_key_exists($key, $this->extras)) {
+            return $this->extras[$key];
+        }
+
+        return false;
+    }
+
+    /**
      * set extra data
      *
      * @param string $key

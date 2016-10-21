@@ -209,6 +209,29 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetExtraGetsSingleExtraItem()
+    {
+        $Result = new Result(Result::SUCCESS);
+        $Result->setExtras([
+            'foo' => 'bar',
+            'bar' => 'foo',
+            'foobar' => [
+                'fizz',
+                'buzz'
+            ]
+        ]);
+
+        $this->assertSame(
+            'bar',
+            $Result->getExtra('foo')
+        );
+
+        $this->assertSame(
+            ['fizz', 'buzz'],
+            $Result->getExtra('foobar')
+        );
+    }
+
     public function testSetCodeSetsCorrectly()
     {
         $Result = new Result(Result::SUCCESS);
