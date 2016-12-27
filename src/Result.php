@@ -7,7 +7,7 @@ class Result
     protected $code = '';
     protected $message = '';
     protected $errors = [];
-    protected $extra = [];
+    protected $extras = [];
 
     const
         SUCCESS = true,
